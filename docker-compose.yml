@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  playout:
+    build: .
+    ports:
+      - "3000:3000"  # API server
+      - "3001:3001"  # Overlay renderer
+    volumes:
+      - ./media:/app/media  # Mount media directory
+      - ./config:/app/config  # Mount configuration
+    environment:
+      - NODE_ENV=production
+      - FFMPEG_PATH=/usr/bin/ffmpeg
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '2'
+          memory: 2G
+
+  # Optional RTMP server for testing
+  rtmp:
+    image: tiangolo/nginx-rtmp
+    ports:
+      - "1935:1935"  # RTMP
+      - "8080:80"    # HTTP (for stats page)
+    volumes:
+      - ./rtmp:/var/www/html  # Mount RTMP recordings directory
+    restart: unless-stopped 
