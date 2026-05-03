@@ -1,5 +1,5 @@
 # Use Node.js as base image
-FROM node:18-bullseye
+FROM node:25-bullseye
 
 # Install FFmpeg and other dependencies
 RUN apt-get update && apt-get install -y \
